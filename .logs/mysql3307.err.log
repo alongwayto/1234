@@ -1,0 +1,65 @@
+2026-05-04T11:59:58.891413Z 0 [Warning] TIMESTAMP with implicit DEFAULT value is deprecated. Please use --explicit_defaults_for_timestamp server option (see documentation for more details).
+2026-05-04T11:59:58.891546Z 0 [Note] --secure-file-priv is set to NULL. Operations related to importing and exporting data are disabled
+2026-05-04T11:59:58.892083Z 0 [Note] D:\Program Files\MySQL\bin\mysqld.exe (mysqld 5.7.26) starting as process 45624 ...
+2026-05-04T11:59:58.898940Z 0 [Note] InnoDB: Mutexes and rw_locks use Windows interlocked functions
+2026-05-04T11:59:58.899600Z 0 [Note] InnoDB: Uses event mutexes
+2026-05-04T11:59:58.899970Z 0 [Note] InnoDB: _mm_lfence() and _mm_sfence() are used for memory barrier
+2026-05-04T11:59:58.900472Z 0 [Note] InnoDB: Compressed tables use zlib 1.2.11
+2026-05-04T11:59:58.901045Z 0 [Note] InnoDB: Number of pools: 1
+2026-05-04T11:59:58.901419Z 0 [Note] InnoDB: Not using CPU crc32 instructions
+2026-05-04T11:59:58.905504Z 0 [Note] InnoDB: Initializing buffer pool, total size = 128M, instances = 1, chunk size = 128M
+2026-05-04T11:59:58.910533Z 0 [Note] InnoDB: Completed initialization of buffer pool
+2026-05-04T11:59:58.941998Z 0 [Note] InnoDB: Highest supported file format is Barracuda.
+2026-05-04T11:59:58.947759Z 0 [Note] InnoDB: Log scan progressed past the checkpoint lsn 27699133
+2026-05-04T11:59:58.948161Z 0 [Note] InnoDB: Doing recovery: scanned up to log sequence number 27699142
+2026-05-04T11:59:58.948461Z 0 [Note] InnoDB: Database was not shutdown normally!
+2026-05-04T11:59:58.948684Z 0 [Note] InnoDB: Starting crash recovery.
+2026-05-04T11:59:59.188013Z 0 [Note] InnoDB: Removed temporary tablespace data file: "ibtmp1"
+2026-05-04T11:59:59.189602Z 0 [Note] InnoDB: Creating shared tablespace for temporary tables
+2026-05-04T11:59:59.191611Z 0 [Note] InnoDB: Setting file '.\ibtmp1' size to 12 MB. Physically writing the file full; Please wait ...
+2026-05-04T11:59:59.200075Z 0 [Note] InnoDB: File '.\ibtmp1' size is now 12 MB.
+2026-05-04T11:59:59.204346Z 0 [Note] InnoDB: 96 redo rollback segment(s) found. 96 redo rollback segment(s) are active.
+2026-05-04T11:59:59.204922Z 0 [Note] InnoDB: 32 non-redo rollback segment(s) are active.
+2026-05-04T11:59:59.205603Z 0 [Note] InnoDB: Waiting for purge to start
+2026-05-04T11:59:59.261679Z 0 [Note] InnoDB: 5.7.26 started; log sequence number 27699142
+2026-05-04T11:59:59.262328Z 0 [Note] Plugin 'FEDERATED' is disabled.
+2026-05-04T11:59:59.262530Z 0 [Note] InnoDB: Loading buffer pool(s) from E:\device manage\.mysql-data\ib_buffer_pool
+2026-05-04T11:59:59.270633Z 0 [Warning] Failed to set up SSL because of the following SSL library error: SSL context is not usable without certificate and private key
+2026-05-04T11:59:59.270953Z 0 [Note] Server hostname (bind-address): '127.0.0.1'; port: 3307
+2026-05-04T11:59:59.271441Z 0 [Note]   - '127.0.0.1' resolves to '127.0.0.1';
+2026-05-04T11:59:59.271724Z 0 [Note] Server socket created on IP: '127.0.0.1'.
+2026-05-04T11:59:59.272903Z 0 [Note] InnoDB: Buffer pool(s) load completed at 260504 19:59:59
+2026-05-04T11:59:59.316796Z 0 [Note] Event Scheduler: Loaded 0 events
+2026-05-04T11:59:59.317606Z 0 [Note] D:\Program Files\MySQL\bin\mysqld.exe: ready for connections.
+Version: '5.7.26'  socket: ''  port: 3307  MySQL Community Server (GPL)
+2026-05-04T12:03:46.458239Z 14 [Note] Got packets out of order
+2026-05-04T12:18:39.997946Z 9 [Note] Aborted connection 9 to db: 'campus_equipment' user: 'root' host: 'localhost' (Got an error reading communication packets)
+2026-05-04T12:18:39.998460Z 5 [Note] Aborted connection 5 to db: 'campus_equipment' user: 'root' host: 'localhost' (Got an error reading communication packets)
+2026-05-04T12:18:39.998881Z 8 [Note] Aborted connection 8 to db: 'campus_equipment' user: 'root' host: 'localhost' (Got an error reading communication packets)
+2026-05-04T12:18:39.999103Z 7 [Note] Aborted connection 7 to db: 'campus_equipment' user: 'root' host: 'localhost' (Got an error reading communication packets)
+2026-05-04T12:18:39.999443Z 4 [Note] Aborted connection 4 to db: 'campus_equipment' user: 'root' host: 'localhost' (Got an error reading communication packets)
+2026-05-04T12:18:40.000526Z 6 [Note] Aborted connection 6 to db: 'campus_equipment' user: 'root' host: 'localhost' (Got an error reading communication packets)
+2026-05-04T12:18:40.000592Z 10 [Note] Aborted connection 10 to db: 'campus_equipment' user: 'root' host: 'localhost' (Got an error reading communication packets)
+2026-05-04T12:18:40.000795Z 11 [Note] Aborted connection 11 to db: 'campus_equipment' user: 'root' host: 'localhost' (Got an error reading communication packets)
+2026-05-04T12:18:40.000908Z 12 [Note] Aborted connection 12 to db: 'campus_equipment' user: 'root' host: 'localhost' (Got an error reading communication packets)
+2026-05-04T12:18:40.001264Z 13 [Note] Aborted connection 13 to db: 'campus_equipment' user: 'root' host: 'localhost' (Got an error reading communication packets)
+2026-05-04T12:30:28.987709Z 23 [Note] Aborted connection 23 to db: 'campus_equipment' user: 'root' host: 'localhost' (Got an error reading communication packets)
+2026-05-04T12:30:28.987823Z 27 [Note] Aborted connection 27 to db: 'campus_equipment' user: 'root' host: 'localhost' (Got an error reading communication packets)
+2026-05-04T12:30:28.988060Z 19 [Note] Aborted connection 19 to db: 'campus_equipment' user: 'root' host: 'localhost' (Got an error reading communication packets)
+2026-05-04T12:30:28.988798Z 20 [Note] Aborted connection 20 to db: 'campus_equipment' user: 'root' host: 'localhost' (Got an error reading communication packets)
+2026-05-04T12:30:28.989013Z 21 [Note] Aborted connection 21 to db: 'campus_equipment' user: 'root' host: 'localhost' (Got an error reading communication packets)
+2026-05-04T12:30:28.989041Z 22 [Note] Aborted connection 22 to db: 'campus_equipment' user: 'root' host: 'localhost' (Got an error reading communication packets)
+2026-05-04T12:30:28.989237Z 24 [Note] Aborted connection 24 to db: 'campus_equipment' user: 'root' host: 'localhost' (Got an error reading communication packets)
+2026-05-04T12:30:28.989237Z 25 [Note] Aborted connection 25 to db: 'campus_equipment' user: 'root' host: 'localhost' (Got an error reading communication packets)
+2026-05-04T12:30:28.989365Z 26 [Note] Aborted connection 26 to db: 'campus_equipment' user: 'root' host: 'localhost' (Got an error reading communication packets)
+2026-05-04T12:30:28.989439Z 28 [Note] Aborted connection 28 to db: 'campus_equipment' user: 'root' host: 'localhost' (Got an error reading communication packets)
+2026-05-04T13:14:33.866887Z 51 [Note] Aborted connection 51 to db: 'campus_equipment' user: 'root' host: 'localhost' (Got an error reading communication packets)
+2026-05-04T13:14:33.868107Z 45 [Note] Aborted connection 45 to db: 'campus_equipment' user: 'root' host: 'localhost' (Got an error reading communication packets)
+2026-05-04T13:14:33.868426Z 47 [Note] Aborted connection 47 to db: 'campus_equipment' user: 'root' host: 'localhost' (Got an error reading communication packets)
+2026-05-04T13:14:33.868627Z 48 [Note] Aborted connection 48 to db: 'campus_equipment' user: 'root' host: 'localhost' (Got an error reading communication packets)
+2026-05-04T13:14:33.868923Z 46 [Note] Aborted connection 46 to db: 'campus_equipment' user: 'root' host: 'localhost' (Got an error reading communication packets)
+2026-05-04T13:14:33.869268Z 49 [Note] Aborted connection 49 to db: 'campus_equipment' user: 'root' host: 'localhost' (Got an error reading communication packets)
+2026-05-04T13:14:33.869412Z 53 [Note] Aborted connection 53 to db: 'campus_equipment' user: 'root' host: 'localhost' (Got an error reading communication packets)
+2026-05-04T13:14:33.869620Z 52 [Note] Aborted connection 52 to db: 'campus_equipment' user: 'root' host: 'localhost' (Got an error reading communication packets)
+2026-05-04T13:14:33.869677Z 44 [Note] Aborted connection 44 to db: 'campus_equipment' user: 'root' host: 'localhost' (Got an error reading communication packets)
+2026-05-04T13:14:33.869888Z 50 [Note] Aborted connection 50 to db: 'campus_equipment' user: 'root' host: 'localhost' (Got an error reading communication packets)

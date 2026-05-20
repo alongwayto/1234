@@ -1,0 +1,1 @@
+import{ag as e}from"./index-a9e96b91.js";const n=(t,o=20)=>e.get(`/monitor/status/${t}`,{params:{limit:o}}),s=()=>e.get("/monitor/realtime"),r=t=>e.get("/monitor/alerts",{params:t}),g=(t,o)=>e.post(`/monitor/alerts/${t}/handle`,o),l=()=>e.get("/monitor/alerts/unhandled-count");export{n as a,s as b,r as c,l as g,g as h};

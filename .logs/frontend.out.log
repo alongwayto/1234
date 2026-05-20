@@ -1,0 +1,18 @@
+
+  [32m[1mVITE[22m v4.5.3[39m  [2mready in [0m[1m1136[22m[2m[0m ms[22m
+
+  [32m➜[39m  [1mLocal[22m:   [36mhttp://127.0.0.1:[1m5173[22m/[39m
+[2m20:02:43[22m [36m[1m[vite][22m[39m [32m✨ new dependencies optimized: [33melement-plus/es/components/descriptions/style/css, element-plus/es/components/descriptions-item/style/css, element-plus/es/components/radio-group/style/css, element-plus/es/components/radio/style/css[32m[39m
+[2m20:02:43[22m [36m[1m[vite][22m[39m [32m✨ optimized dependencies changed. reloading[39m
+[2m20:03:15[22m [36m[1m[vite][22m[39m [32m✨ new dependencies optimized: [33melement-plus/es/components/divider/style/css[32m[39m
+[2m20:03:15[22m [36m[1m[vite][22m[39m [32m✨ optimized dependencies changed. reloading[39m
+[2m20:27:02[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/views/fault/report/index.vue, /src/views/fault/workorder/index.vue, /src/views/fault/archive/index.vue[22m
+[2m20:27:09[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/views/dashboard/index.vue, /src/views/statistics/usage/index.vue, /src/views/statistics/cost/index.vue, /src/views/statistics/fault/index.vue[22m
+[2m20:27:26[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/views/fault/workorder/index.vue, /src/views/fault/workorder/index.vue?vue&type=style&index=0&scoped=3ff18f56&lang.css[22m
+[2m20:28:32[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/views/fault/workorder/index.vue, /src/views/fault/workorder/index.vue?vue&type=style&index=0&scoped=3ff18f56&lang.css[22m
+[2m20:28:42[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/views/fault/workorder/index.vue, /src/views/fault/workorder/index.vue?vue&type=style&index=0&scoped=3ff18f56&lang.css[22m
+[2m20:29:02[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/views/statistics/cost/index.vue[22m
+[2m20:29:32[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/views/statistics/cost/index.vue[22m
+[2m20:29:33[22m [36m[1m[vite][22m[39m [32m✨ new dependencies optimized: [33melement-plus/es/components/radio-button/style/css[32m[39m
+[2m20:29:33[22m [36m[1m[vite][22m[39m [32m✨ optimized dependencies changed. reloading[39m
+[2m20:32:47[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/views/fault/workorder/index.vue[22m

@@ -1,0 +1,159 @@
+# 安全漏洞修复详细指南
+
+## 高风险漏洞修复
+
+### 1. XSS 漏洞修复 - AI 聊天模块
+
+文件: frontend/src/views/ai/index.vue
+
+安装依赖:
+npm install dompurify
+
+修改代码:
+- 使用 DOMPurify.sanitize() 清理 HTML 内容
+- 只允许特定的标签: br, strong, em, u
+- 禁止所有属性
+
+### 2. CORS 配置修复
+
+文件: backend/src/main/java/com/campus/equipment/config/WebMvcConfig.java
+
+修改:
+- 从 allowedOriginPatterns("*") 改为具体域名列表
+- 从环境变量读取允许的来源
+- 限制允许的请求头
+
+### 3. 数据库 SSL 启用
+
+文件: application.yml
+
+修改:
+- useSSL=false 改为 useSSL=true
+- 添加 serverSslMode=REQUIRED
+- 使用环境变量配置数据库凭证
+
+### 4. 文件上传验证
+
+创建 FileUploadValidator 类:
+- 验证文件类型 (仅允许图片)
+- 验证文件大小 (最大 5MB)
+- 验证文件名 (防止路径遍历)
+- 生成安全的文件名 (使用 UUID)
+
+### 5. 命令注入修复
+
+文件: BackupController.java
+
+修改:
+- 验证数据库名称 (仅允许字母、数字、下划线)
+- 通过环境变量传递数据库密码
+- 验证备份路径
+
+## 中风险漏洞修复
+
+### 6. 移除硬编码凭证
+
+文件: application.yml
+
+修改:
+- 所有敏感信息使用环境变量
+- 数据库用户名、密码
+- JWT 密钥
+- OpenAI API 密钥
+
+### 7. 禁用调试日志
+
+文件: application.yml
+
+修改:
+- 日志级别改为 info
+- 使用环境变量控制日志级别
+- 配置日志文件轮转
+
+### 8. 添加安全响应头
+
+创建 SecurityHeadersConfig 类:
+- X-Frame-Options: DENY
+- X-Content-Type-Options: nosniff
+- X-XSS-Protection: 1; mode=block
+- Content-Security-Policy
+- Strict-Transport-Security
+- Cache-Control: no-cache
+
+### 9. 实现速率限制
+
+添加依赖: bucket4j
+
+创建 RateLimitInterceptor:
+- 每分钟 100 个请求
+- 基于客户端 IP 地址
+- 返回 429 状态码
+
+### 10. 改进异常处理
+
+文件: GlobalExceptionHandler.java
+
+修改:
+- 记录详细错误到日志
+- 返回通用错误消息给客户端
+- 不泄露系统内部信息
+
+### 11. 使用 HttpOnly Cookie
+
+后端:
+- 设置 HttpOnly 标志
+- 设置 Secure 标志 (HTTPS only)
+- 设置 SameSite 属性
+
+前端:
+- 从 Cookie 读取 token
+- 不在 localStorage 存储敏感信息
+
+## 部署检查清单
+
+- [ ] 所有硬编码凭证已移除
+- [ ] 环境变量已配置
+- [ ] HTTPS 已启用
+- [ ] 数据库 SSL 已启用
+- [ ] 防火墙规则已配置
+- [ ] 日志级别已设置为 INFO
+- [ ] 调试模式已禁用
+- [ ] 依赖已更新
+- [ ] 安全测试已完成
+- [ ] 备份已验证
+
+## 测试命令
+
+测试 CORS:
+curl -H "Origin: http://evil.com" -X OPTIONS http://localhost:8080/api/device
+
+测试速率限制:
+for i in {1..150}; do curl http://localhost:8080/api/device; done
+
+测试文件上传:
+curl -F "file=@malicious.exe" http://localhost:8080/api/auth/avatar
+
+## 优先级
+
+高优先级 (立即修复):
+1. XSS 漏洞
+2. CORS 配置
+3. 数据库 SSL
+4. 文件上传验证
+5. 命令注入
+
+中优先级 (短期修复):
+6. 移除硬编码凭证
+7. 禁用调试日志
+8. 添加安全响应头
+9. 实现速率限制
+10. 改进异常处理
+
+低优先级 (长期改进):
+11. HttpOnly Cookie
+12. 增强输入验证
+13. 实现审计日志
+14. 定期更新依赖
+15. 实现 WAF
+
+完成日期: 2024年

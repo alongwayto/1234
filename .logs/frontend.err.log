@@ -1,0 +1,10 @@
+(node:48728) [DEP0060] DeprecationWarning: The `util._extend` API is deprecated. Please use Object.assign() instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+[2m20:30:29[22m [31m[1m[vite][22m[39m [31mhttp proxy error at /api/statistics/cost-monthly?months=12:[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1142:49)
+    at afterConnectMultiple (node:net:1723:7)
+[2m20:30:30[22m [31m[1m[vite][22m[39m [31mhttp proxy error at /api/statistics/cost-monthly?months=36:[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1142:49)
+    at afterConnectMultiple (node:net:1723:7)
