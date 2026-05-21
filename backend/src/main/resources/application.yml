@@ -43,6 +43,13 @@ doubao:
   max-tokens: ${DOUBAO_MAX_TOKENS:2000}
   temperature: ${DOUBAO_TEMPERATURE:0.7}
 
+# AI 诊断配置
+ai:
+  api:
+    key: ${AI_API_KEY:}
+    url: ${AI_API_URL:https://ark.cn-beijing.volces.com/api/v3/chat/completions}
+    model: ${AI_MODEL:doubao-pro}
+
 file:
   upload-path: ./uploads/
   avatar-path: ./uploads/avatars/

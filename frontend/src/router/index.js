@@ -26,6 +26,12 @@ const routes = [
       // 状态监控
       { path: 'monitor/status', name: 'MonitorStatus', component: () => import('@/views/monitor/status/index.vue'), meta: { title: '实时监控', icon: 'DataAnalysis' } },
       { path: 'monitor/alert', name: 'MonitorAlert', component: () => import('@/views/monitor/alert/index.vue'), meta: { title: '预警管理', icon: 'Bell' } },
+      // AI智能体
+      { path: 'ai/chat', name: 'AIChat', component: () => import('@/views/ai/chat.vue'), meta: { title: 'AI智能助手', icon: 'ChatDotRound' } },
+      { path: 'ai/diagnosis', name: 'AIDiagnosis', component: () => import('@/views/ai/diagnosis.vue'), meta: { title: 'AI智能诊断', icon: 'Cpu' } },
+      // 生命周期管理
+      { path: 'lifecycle/record', name: 'LifecycleRecord', component: () => import('@/views/lifecycle/index.vue'), meta: { title: '生命周期记录', icon: 'Timer' } },
+      { path: 'lifecycle/predict', name: 'LifecyclePredict', component: () => import('@/views/lifecycle/predict.vue'), meta: { title: '预测性维护', icon: 'TrendCharts' } },
       // 故障管理
       { path: 'fault/report', name: 'FaultReport', component: () => import('@/views/fault/report/index.vue'), meta: { title: '故障上报', icon: 'Warning' } },
       { path: 'fault/workorder', name: 'FaultWorkorder', component: () => import('@/views/fault/workorder/index.vue'), meta: { title: '工单管理', icon: 'Tickets' } },

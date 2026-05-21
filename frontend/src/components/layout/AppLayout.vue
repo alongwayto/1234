@@ -63,7 +63,23 @@
             <el-menu-item index="/statistics/fault">故障报表</el-menu-item>
           </el-sub-menu>
 
-       
+          <el-sub-menu index="ai">
+            <template #title>
+              <el-icon><ChatDotRound /></el-icon>
+              <span>AI智能体</span>
+            </template>
+            <el-menu-item index="/ai/chat">AI助手</el-menu-item>
+            <el-menu-item index="/ai/diagnosis">智能诊断</el-menu-item>
+          </el-sub-menu>
+
+          <el-sub-menu index="lifecycle">
+            <template #title>
+              <el-icon><Timer /></el-icon>
+              <span>生命周期</span>
+            </template>
+            <el-menu-item index="/lifecycle/record">生命周期记录</el-menu-item>
+            <el-menu-item index="/lifecycle/predict">预测性维护</el-menu-item>
+          </el-sub-menu>
 
           <el-sub-menu index="system" v-if="userStore.roles.includes('ROLE_ADMIN')">
             <template #title>

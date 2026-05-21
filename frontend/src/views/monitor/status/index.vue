@@ -5,9 +5,15 @@
         <h2>实时监控大屏</h2>
         <p>设备运行状态、性能指标、健康评分与维护建议</p>
       </div>
-      <div class="refresh-state">
-        <span class="pulse"></span>
-        <span>{{ refreshText }}</span>
+      <div class="header-right">
+        <div class="ws-status" :class="wsConnected ? 'connected' : 'disconnected'">
+          <span class="ws-dot"></span>
+          <span>{{ wsConnected ? '实时连接' : '连接断开' }}</span>
+        </div>
+        <div class="refresh-state">
+          <span class="pulse" :class="{ 'is-active': wsConnected }"></span>
+          <span>{{ refreshText }}</span>
+        </div>
       </div>
     </div>
 
@@ -149,10 +155,15 @@
 import { computed, nextTick, onMounted, onUnmounted, reactive, ref } from 'vue'
 import * as echarts from 'echarts'
 import { getRealtimeMonitor } from '@/api/monitor'
+import { wsService } from '@/utils/websocket'
+import { useUserStore } from '@/store/user'
 
+const userStore = useUserStore()
 const statusChartRef = ref()
 const trendChartRef = ref()
 const refreshText = ref('正在连接')
+const wsConnected = ref(false)
+
 const monitor = reactive({
   totalDevices: 0,
   onlineDevices: 0,
@@ -184,8 +195,15 @@ onMounted(async () => {
   await nextTick()
   statusChart = echarts.init(statusChartRef.value)
   trendChart = echarts.init(trendChartRef.value)
+  
+  // 初始化 WebSocket 连接
+  initWebSocket()
+  
+  // 加载初始数据
   await loadRealtime()
-  timer = setInterval(loadRealtime, 5000)
+  
+  // 定时刷新（作为 WebSocket 的备份）
+  timer = setInterval(loadRealtime, 30000)
   window.addEventListener('resize', resizeCharts)
 })
 
@@ -194,13 +212,56 @@ onUnmounted(() => {
   window.removeEventListener('resize', resizeCharts)
   statusChart?.dispose()
   trendChart?.dispose()
+  
+  // 断开 WebSocket 连接
+  wsService.disconnect()
 })
 
+/**
+ * 初始化 WebSocket 连接
+ */
+async function initWebSocket() {
+  try {
+    await wsService.connect(userStore.userInfo?.id || 'anonymous')
+    wsConnected.value = true
+    refreshText.value = '实时同步中...'
+    
+    // 订阅设备状态概览更新
+    wsService.subscribeDeviceOverview((data) => {
+      if (data) {
+        Object.assign(monitor, data)
+        renderCharts()
+        refreshText.value = `实时更新于 ${formatTime(new Date())}`
+      }
+    })
+    
+    // 订阅新预警
+    wsService.subscribeNewAlert((alert) => {
+      // 刷新预警列表
+      loadRealtime()
+    })
+    
+    // 订阅预警数量
+    wsService.subscribeAlertCount((count) => {
+      monitor.unhandledAlerts = count
+    })
+    
+  } catch (error) {
+    console.error('WebSocket 连接失败:', error)
+    wsConnected.value = false
+    refreshText.value = '实时连接失败，使用轮询模式'
+  }
+}
+
 async function loadRealtime() {
-  const res = await getRealtimeMonitor()
-  Object.assign(monitor, res.data)
-  refreshText.value = `刷新于 ${formatTime(res.data.refreshTime)}`
-  renderCharts()
+  try {
+    const res = await getRealtimeMonitor()
+    Object.assign(monitor, res.data)
+    refreshText.value = `刷新于 ${formatTime(res.data.refreshTime || new Date())}`
+    renderCharts()
+  } catch (error) {
+    console.error('加载实时数据失败:', error)
+  }
 }
 
 function renderCharts() {
@@ -301,6 +362,47 @@ function formatTime(value) {
   margin-bottom: 16px;
 }
 
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.ws-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.ws-status.connected {
+  background: rgba(47, 143, 111, 0.1);
+  color: #2f8f6f;
+}
+
+.ws-status.disconnected {
+  background: rgba(207, 75, 75, 0.1);
+  color: #cf4b4b;
+}
+
+.ws-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+
+.ws-status.connected .ws-dot {
+  background: #2f8f6f;
+  box-shadow: 0 0 4px rgba(47, 143, 111, 0.6);
+}
+
+.ws-status.disconnected .ws-dot {
+  background: #cf4b4b;
+}
+
 .screen-header h2 {
   margin: 0;
   font-size: 24px;
@@ -327,8 +429,23 @@ function formatTime(value) {
   width: 8px;
   height: 8px;
   border-radius: 50%;
+  background: #8b95a1;
+  box-shadow: 0 0 0 4px rgba(139, 149, 161, 0.12);
+}
+
+.pulse.is-active {
   background: #2f8f6f;
   box-shadow: 0 0 0 4px rgba(47, 143, 111, 0.12);
+  animation: pulse-animation 2s ease-in-out infinite;
+}
+
+@keyframes pulse-animation {
+  0%, 100% {
+    box-shadow: 0 0 0 4px rgba(47, 143, 111, 0.12);
+  }
+  50% {
+    box-shadow: 0 0 0 8px rgba(47, 143, 111, 0.06);
+  }
 }
 
 .stat-row,

@@ -335,6 +335,34 @@ CREATE TABLE `maintenance_cost` (
     `create_time`  DATETIME       DEFAULT CURRENT_TIMESTAMP,
     `update_time`  DATETIME       DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`),
-    KEY `idx_device_id` (`device_id`),
-    KEY `idx_cost_date` (`cost_date`)
+-- ----------------------------
+-- 16. 操作日志表
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_operation_log`;
+CREATE TABLE `sys_operation_log` (
+    `id`              BIGINT         NOT NULL AUTO_INCREMENT COMMENT '日志ID',
+    `operation_type`  VARCHAR(50)    DEFAULT NULL COMMENT '操作类型',
+    `module`          VARCHAR(100)   DEFAULT NULL COMMENT '操作模块',
+    `description`     VARCHAR(500)   DEFAULT NULL COMMENT '操作描述',
+    `request_method`  VARCHAR(20)    DEFAULT NULL COMMENT '请求方法',
+    `request_url`     VARCHAR(500)   DEFAULT NULL COMMENT '请求URL',
+    `request_params`  TEXT           DEFAULT NULL COMMENT '请求参数',
+    `response_result` VARCHAR(200)   DEFAULT NULL COMMENT '响应结果',
+    `success`         TINYINT        DEFAULT 1 COMMENT '是否成功：0-失败 1-成功',
+    `error_msg`       VARCHAR(1000)  DEFAULT NULL COMMENT '错误信息',
+    `duration`        BIGINT         DEFAULT NULL COMMENT '执行时长(毫秒)',
+    `user_id`         BIGINT         DEFAULT NULL COMMENT '用户ID',
+    `username`        VARCHAR(50)    DEFAULT NULL COMMENT '用户名',
+    `real_name`       VARCHAR(50)    DEFAULT NULL COMMENT '真实姓名',
+    `ip`              VARCHAR(50)    DEFAULT NULL COMMENT 'IP地址',
+    `location`        VARCHAR(200)   DEFAULT NULL COMMENT '操作地点',
+    `user_agent`      VARCHAR(500)   DEFAULT NULL COMMENT 'User-Agent',
+    `create_time`     DATETIME       DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    PRIMARY KEY (`id`),
+    KEY `idx_user_id` (`user_id`),
+    KEY `idx_module` (`module`),
+    KEY `idx_operation_type` (`operation_type`),
+    KEY `idx_create_time` (`create_time`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='操作日志表';
+
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='维护成本表';

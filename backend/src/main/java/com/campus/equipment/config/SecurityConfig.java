@@ -49,6 +49,8 @@ public class SecurityConfig {
             .authorizeRequests()
                 .antMatchers("/auth/login", "/auth/register").permitAll()
                 .antMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll()
+                .antMatchers("/ws/**").permitAll()  // 允许 WebSocket 连接
+                .antMatchers("/queue/**").permitAll() // 允许消息队列端点
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .anyRequest().authenticated()
             .and()
