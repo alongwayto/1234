@@ -43,12 +43,13 @@ doubao:
   max-tokens: ${DOUBAO_MAX_TOKENS:2000}
   temperature: ${DOUBAO_TEMPERATURE:0.7}
 
-# AI 诊断配置
+# AI 诊断配置 (支持 Ollama、火山引擎、模拟模式)
 ai:
+  mode: ${AI_MODE:ollama}  # ollama(默认免费), volcengine(云端), mock(模拟)
+  model: ${AI_MODEL:qwen2.5:3b}  # Ollama模型: qwen2.5, llama3.2, mistral, deepseek-r1
   api:
-    key: ${AI_API_KEY:}
-    url: ${AI_API_URL:https://ark.cn-beijing.volces.com/api/v3/chat/completions}
-    model: ${AI_MODEL:doubao-pro}
+    key: ${AI_API_KEY:}  # 火山引擎API Key (mode=volcengine时需要)
+    url: ${AI_API_URL:}  # 自定义API地址 (Ollama默认: http://localhost:11434/api/chat)
 
 file:
   upload-path: ./uploads/

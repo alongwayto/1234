@@ -15,8 +15,15 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
- * AI 诊断服务 - 基于豆包/火山引擎大模型
- * 用于设备故障诊断和智能维护建议
+ * AI 诊断服务 - 支持多种AI后端
+ * 
+ * 支持的AI模式:
+ * 1. ollama (默认) - 本地开源模型，完全免费
+ * 2. volcengine - 豆包/火山引擎云端API
+ * 3. mock - 模拟数据（无配置时使用）
+ * 
+ * Ollama安装: https://ollama.ai/
+ * 推荐模型: qwen2.5, llama3.2, mistral, deepseek-r1
  */
 @Slf4j
 @Service
@@ -25,14 +32,19 @@ public class AIDiagnosisService {
 
     private final ObjectMapper objectMapper;
     
+    // ==================== 配置字段 ====================
+    
     @Value("${ai.api.key:}")
     private String apiKey;
     
-    @Value("${ai.api.url:https://ark.cn-beijing.volces.com/api/v3/chat/completions}")
+    @Value("${ai.api.url:}")
     private String apiUrl;
     
-    @Value("${ai.model:doubao-pro}")
+    @Value("${ai.model:qwen2.5:3b}")
     private String model;
+    
+    @Value("${ai.mode:ollama}")
+    private String aiMode;  // ollama, volcengine, mock
     
     private static final MediaType JSON = MediaType.get("application/json; charset=utf-8");
     private static final OkHttpClient CLIENT = new OkHttpClient.Builder()
@@ -45,12 +57,11 @@ public class AIDiagnosisService {
      * 诊断设备状态问题
      */
     public DiagnosisResult diagnoseDevice(DeviceStatusData data) {
-        if (StrUtil.isBlank(apiKey)) {
+        String response = callAI(buildDiagnosisPrompt(data));
+        
+        if (response == null || response.startsWith("AI服务")) {
             return getMockDiagnosis(data);
         }
-        
-        String prompt = buildDiagnosisPrompt(data);
-        String response = callAI(prompt);
         
         return parseDiagnosisResponse(response, data);
     }
@@ -59,24 +70,28 @@ public class AIDiagnosisService {
      * 生成维护建议
      */
     public String generateMaintenanceAdvice(DeviceStatusData data) {
-        if (StrUtil.isBlank(apiKey)) {
+        String response = callAI(buildAdvicePrompt(data));
+        
+        if (response == null || response.startsWith("AI服务")) {
             return generateMockAdvice(data);
         }
         
-        String prompt = buildAdvicePrompt(data);
-        return callAI(prompt);
+        return response;
     }
 
     /**
      * 预测设备故障风险
      */
     public RiskPrediction predictFailureRisk(DeviceStatusData data, List<DeviceStatusData> history) {
-        if (StrUtil.isBlank(apiKey) || history == null || history.isEmpty()) {
-            return calculateLocalRisk(data, history);
+        if (history == null || history.isEmpty()) {
+            return calculateLocalRisk(data, null);
         }
         
-        String prompt = buildRiskPredictionPrompt(data, history);
-        String response = callAI(prompt);
+        String response = callAI(buildRiskPredictionPrompt(data, history));
+        
+        if (response == null || response.startsWith("AI服务")) {
+            return calculateLocalRisk(data, history);
+        }
         
         return parseRiskResponse(response, data);
     }
@@ -85,21 +100,96 @@ public class AIDiagnosisService {
      * 智能问答
      */
     public String answerQuestion(String question, String context) {
-        if (StrUtil.isBlank(apiKey)) {
+        String response = callAI(buildQAPrompt(question, context));
+        
+        if (response == null || response.startsWith("AI服务")) {
             return getMockAnswer(question);
         }
         
-        String prompt = buildQAPrompt(question, context);
-        return callAI(prompt);
+        return response;
     }
 
     /**
-     * 调用 AI 接口
+     * 调用 AI 接口 (支持多种后端)
      */
     private String callAI(String prompt) {
+        // 根据模式选择不同的AI调用方式
+        switch (aiMode.toLowerCase()) {
+            case "ollama":
+                return callOllama(prompt);
+            case "volcengine":
+                return callVolcengine(prompt);
+            case "mock":
+            default:
+                return "AI服务未配置，请检查环境变量或启动Ollama服务。";
+        }
+    }
+    
+    /**
+     * 调用 Ollama 本地模型 (推荐，免费)
+     */
+    private String callOllama(String prompt) {
+        // 如果未配置Ollama URL，尝试默认地址
+        String ollamaUrl = StrUtil.isBlank(apiUrl) ? "http://localhost:11434/api/chat" : apiUrl;
+        String modelName = model.contains(":") ? model : model + ":latest";
+        
         try {
             Map<String, Object> requestBody = new HashMap<>();
-            requestBody.put("model", model);
+            requestBody.put("model", modelName);
+            requestBody.put("stream", false);
+            
+            List<Map<String, String>> messages = new ArrayList<>();
+            messages.add(Map.of(
+                "role", "system",
+                "content", "你是一位专业的校园设备管理专家，擅长设备故障诊断、维护建议和智能问答。请用专业但易懂的语言回答。"
+            ));
+            messages.add(Map.of(
+                "role", "user", 
+                "content", prompt
+            ));
+            requestBody.put("messages", messages);
+            
+            RequestBody body = RequestBody.create(
+                objectMapper.writeValueAsString(requestBody), JSON);
+            
+            Request request = new Request.Builder()
+                    .url(ollamaUrl)
+                    .addHeader("Content-Type", "application/json")
+                    .post(body)
+                    .build();
+            
+            try (Response response = CLIENT.newCall(request).execute()) {
+                if (!response.isSuccessful()) {
+                    log.warn("Ollama API 调用失败: {}, 尝试降级到模拟数据", response);
+                    return null; // 返回null触发降级
+                }
+                
+                String responseBody = response.body().string();
+                JsonNode root = objectMapper.readTree(responseBody);
+                return root.path("message").path("content").asText();
+            }
+        } catch (Exception e) {
+            log.warn("Ollama 调用异常: {}, 将使用模拟数据", e.getMessage());
+            return null;
+        }
+    }
+    
+    /**
+     * 调用火山引擎/豆包云端API
+     */
+    private String callVolcengine(String prompt) {
+        if (StrUtil.isBlank(apiKey)) {
+            log.warn("未配置火山引擎API Key，尝试降级");
+            return null;
+        }
+        
+        String volcUrl = StrUtil.isBlank(apiUrl) 
+            ? "https://ark.cn-beijing.volces.com/api/v3/chat/completions" 
+            : apiUrl;
+        
+        try {
+            Map<String, Object> requestBody = new HashMap<>();
+            requestBody.put("model", StrUtil.isBlank(model) ? "doubao-pro" : model);
             
             List<Map<String, String>> messages = new ArrayList<>();
             messages.add(Map.of(
@@ -118,11 +208,33 @@ public class AIDiagnosisService {
                 objectMapper.writeValueAsString(requestBody), JSON);
             
             Request request = new Request.Builder()
-                    .url(apiUrl)
+                    .url(volcUrl)
                     .addHeader("Authorization", "Bearer " + apiKey)
                     .addHeader("Content-Type", "application/json")
                     .post(body)
                     .build();
+            
+            try (Response response = CLIENT.newCall(request).execute()) {
+                if (!response.isSuccessful()) {
+                    log.error("火山引擎 API 调用失败: {}", response);
+                    return null;
+                }
+                
+                String responseBody = response.body().string();
+                JsonNode root = objectMapper.readTree(responseBody);
+                
+                JsonNode choices = root.path("choices");
+                if (choices.isArray() && !choices.isEmpty()) {
+                    return choices.get(0).path("message").path("content").asText();
+                }
+                
+                return root.path("content").asText("AI响应格式异常");
+            }
+        } catch (Exception e) {
+            log.error("火山引擎 API 调用异常", e);
+            return null;
+        }
+    }
             
             try (Response response = CLIENT.newCall(request).execute()) {
                 if (!response.isSuccessful()) {
